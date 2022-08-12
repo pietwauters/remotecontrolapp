@@ -1,27 +1,23 @@
 package com.example.remotecontrolfull
 
+import android.R.attr.port
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.Vibrator
 import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.GestureDetectorCompat
-import androidx.fragment.app.FragmentActivity
 import app.com.kotlinapp.OnSwipeTouchListener
 import com.example.remotecontrolfull.databinding.ActivityMainBinding
 import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import java.net.InetAddress.getLocalHost
+
 
 public class SoftOptions {
     var RemoteHost: String = "192.168.4.1"
@@ -74,23 +70,10 @@ open class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var layout: ConstraintLayout
 
-    open fun receiveUDP() {
-        val buffer = ByteArray(2048)
-        var socket: DatagramSocket? = null
-        try {
-            //Keep a socket open to listen to all the UDP trafic that is destined for this port
-            socket = DatagramSocket(CyranoSettings.RemotePort, InetAddress.getByName(CyranoSettings.RemoteHost))
-            socket.broadcast = true
-            val packet = DatagramPacket(buffer, buffer.size)
-            socket.receive(packet)
-            println("open fun receiveUDP packet received = " + packet.data)
-
-        } catch (e: Exception) {
-            println("open fun receiveUDP catch exception." + e.toString())
-            e.printStackTrace()
-        } finally {
-            socket?.close()
-        }
+    open fun ProcessUDPMessage(EFPMessage: String)
+    {
+        //Do Something interesting
+        //Log.d("Received data", EFPMessage)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,12 +82,10 @@ open class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        CyranoSettings.RemoteHost = "192.168.4.1"
-        CyranoSettings.RemotePort = 50100
 
         StrictMode.setThreadPolicy(policy)
-        println("Create Runnable example.")
-        val threadWithRunnable = Thread(udp_DataArrival())
+        println("Create Thread to Listen to UDP .")
+        val threadWithRunnable = Thread(ClientListen())
         threadWithRunnable.start()
 
         binding.btnstartStop.setOnClickListener {
@@ -162,11 +143,29 @@ open class MainActivity : AppCompatActivity() {
     }
 }
 
-class udp_DataArrival: Runnable, MainActivity() {
-    public override fun run() {
-        println("${Thread.currentThread()} Runnable Thread Started.")
-        while (true){
-            receiveUDP()
+open class ClientListen : Runnable , MainActivity() {
+    override fun run() {
+        var run = true
+        try {
+            val udpSocket = DatagramSocket(50112)
+            val message = ByteArray(512)
+            val packet = DatagramPacket(message, message.size)
+            //Log.i("UDP client: ", "about to wait to receive")
+            while (run) {
+                try {
+                    //Log.i("UDP client: ", "about to wait to receive")
+                    udpSocket.receive(packet)
+                    val text = String(message, 0, packet.length)
+                    //Log.d("Received data", text)
+                    ProcessUDPMessage(text)
+                } catch (e: IOException) {
+                    Log.e("UDP client has IOException", "error: ", e)
+                    run = false
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("UDP client has IOException", "error: ", e)
+            run = false
         }
     }
 }
