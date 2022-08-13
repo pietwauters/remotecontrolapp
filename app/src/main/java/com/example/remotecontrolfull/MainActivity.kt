@@ -103,6 +103,15 @@ open class MainActivity : AppCompatActivity() {
             binding.textViewTimer.setTextColor(Color.parseColor("#404070"))
     }
 
+    // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onStatusEvent(event: StatusEvent) {
+
+        // Update the status (deal only with score for the main activity
+        binding.textViewScoreLeft.text = event.ScoreLeft
+        binding.textViewScoreRight.text = event.ScoreRight
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -171,14 +180,18 @@ open class MainActivity : AppCompatActivity() {
     }
 }
 const val MAX_MESSAGE_LENGTH_RS422 = 39
-const val SOH  = 0x01
+const val SOH:Byte  = 0x01
 const val DC3:Byte  = 0x13
-const val DC4  = 0x14
-const val EOT  = 0x04
+const val DC4:Byte  = 0x14
+const val EOT:Byte  = 0x04
 const val STX:Byte  = 0x02
 const val ASCII_N:Byte  = 0x4e
 const val ASCII_R:Byte  = 0x52
 const val ASCII_D:Byte = 0x44
+const val ASCII_I:Byte  = 0x49
+const val ASCII_J:Byte  = 0x4a
+const val ASCII_B:Byte  = 0x42
+
 
 open class ClientListen : Runnable , MainActivity() {
     override fun run() {
@@ -192,29 +205,15 @@ open class ClientListen : Runnable , MainActivity() {
                 try {
                     //Log.i("UDP client: ", "about to wait to receive")
                     udpSocket.receive(packet)
-                    if((message.elementAt(1)== DC3)&&(message.elementAt(3)== STX))
-                    {
-                        if((message.elementAt(2) == ASCII_R)||(message.elementAt(2) == ASCII_N))
-                        {
-                            val text1 = String(message, 2, 1)
-                            Log.d("Byte 2 = ", text1)
-                            val text = String(message, 4, 5)
-                            Log.d("Received data", text)
-
-                            val type = when (text1) {
-                                "R" -> TimerEventType.Running
-                                "N" -> TimerEventType.Stopped
-                                "B" -> TimerEventType.Break
-                                "I" -> TimerEventType.Injury
-                                else -> TimerEventType.Stopped
-                            }
-                            EventBus.getDefault().postSticky( TimerEvent(text,type));
+                    Log.i("UDP client: ", "Received a packet")
+                    /*if(MessageType(message) == RS422_FPAMessageType.Timer)
+                        EventBus.getDefault().postSticky( PacketToTimerEvent(message))*/
+                    when (MessageType(message)) {
+                        RS422_FPAMessageType.Timer -> EventBus.getDefault().postSticky( PacketToTimerEvent(message))
+                        RS422_FPAMessageType.CompetitorStatus -> EventBus.getDefault().postSticky( PacketToStatusEvent(message))
+                        else -> {}//Do nopthing
                         }
 
-                    }
-                    //val text = String(message, 0, packet.length)
-                    //Log.d("Received data", text)
-                    //ProcessUDPMessage(text)
                 } catch (e: IOException) {
                     Log.e("UDP client has IOException", "error: ", e)
                     run = false
@@ -225,4 +224,44 @@ open class ClientListen : Runnable , MainActivity() {
             run = false
         }
     }
+}
+
+
+fun MessageType(message: ByteArray):RS422_FPAMessageType {
+
+    if(message.elementAt(1)== DC4)
+        return RS422_FPAMessageType.Lights
+    if(message.elementAt(1)!= DC3)
+        return RS422_FPAMessageType.Unknown
+
+    if(message.elementAt(3)== STX) {// Type2-3-4
+
+        when (message.elementAt(2)) {
+            ASCII_D -> return RS422_FPAMessageType.CompetitorStatus
+            ASCII_I -> return RS422_FPAMessageType.ApparatusStatus
+            ASCII_R,ASCII_N,ASCII_J,ASCII_B -> return RS422_FPAMessageType.Timer
+            else -> return RS422_FPAMessageType.Unknown}
+    }
+    return RS422_FPAMessageType.Unknown
+}
+
+fun PacketToTimerEvent(message: ByteArray):TimerEvent{
+
+    val text1 = String(message, 2, 1)
+    val text = String(message, 4, 5)
+
+    val type = when (text1) {
+        "R" -> TimerEventType.Running
+        "N" -> TimerEventType.Stopped
+        "B" -> TimerEventType.Break
+        "I" -> TimerEventType.Injury
+        else -> TimerEventType.Stopped
+    }
+    return TimerEvent(text,type)
+
+}
+
+fun PacketToStatusEvent(message: ByteArray):StatusEvent{
+    return StatusEvent(String(message, 7, 2),String(message, 4, 2))
+
 }
