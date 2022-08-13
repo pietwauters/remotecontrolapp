@@ -1,8 +1,9 @@
 package com.example.remotecontrolfull
 
-import android.R.attr.port
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Color.red
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.Vibrator
@@ -10,13 +11,16 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import app.com.kotlinapp.OnSwipeTouchListener
 import com.example.remotecontrolfull.databinding.ActivityMainBinding
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import java.net.InetAddress.getLocalHost
 
 
 public class SoftOptions {
@@ -75,18 +79,36 @@ open class MainActivity : AppCompatActivity() {
         //Do Something interesting
         //Log.d("Received data", EFPMessage)
     }
+    open fun ProcessUDPTimerMessage(Time: String, Type: String)
+    {
+        binding.textViewTimer.text = "2:57"
+    }
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+    // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onTimerEvent(event: TimerEvent) {
+
+        binding.textViewTimer.text = event.time
+        if(event.Type == TimerEventType.Running)
+            binding.textViewTimer.setTextColor(Color.parseColor("#4c8c4a"))
+        else
+            binding.textViewTimer.setTextColor(Color.parseColor("#404070"))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
-        StrictMode.setThreadPolicy(policy)
-        println("Create Thread to Listen to UDP .")
-        val threadWithRunnable = Thread(ClientListen())
-        threadWithRunnable.start()
 
         binding.btnstartStop.setOnClickListener {
             sendUDP(UI_INPUT_TOGGLE_TIMER)
@@ -140,8 +162,23 @@ open class MainActivity : AppCompatActivity() {
 
             }
         })
+        ProcessUDPTimerMessage("","R")
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        println("Create Thread to Listen to UDP .")
+        val threadWithRunnable = Thread(ClientListen())
+        threadWithRunnable.start()
     }
 }
+const val MAX_MESSAGE_LENGTH_RS422 = 39
+const val SOH  = 0x01
+const val DC3:Byte  = 0x13
+const val DC4  = 0x14
+const val EOT  = 0x04
+const val STX:Byte  = 0x02
+const val ASCII_N:Byte  = 0x4e
+const val ASCII_R:Byte  = 0x52
+const val ASCII_D:Byte = 0x44
 
 open class ClientListen : Runnable , MainActivity() {
     override fun run() {
@@ -155,9 +192,29 @@ open class ClientListen : Runnable , MainActivity() {
                 try {
                     //Log.i("UDP client: ", "about to wait to receive")
                     udpSocket.receive(packet)
-                    val text = String(message, 0, packet.length)
+                    if((message.elementAt(1)== DC3)&&(message.elementAt(3)== STX))
+                    {
+                        if((message.elementAt(2) == ASCII_R)||(message.elementAt(2) == ASCII_N))
+                        {
+                            val text1 = String(message, 2, 1)
+                            Log.d("Byte 2 = ", text1)
+                            val text = String(message, 4, 5)
+                            Log.d("Received data", text)
+
+                            val type = when (text1) {
+                                "R" -> TimerEventType.Running
+                                "N" -> TimerEventType.Stopped
+                                "B" -> TimerEventType.Break
+                                "I" -> TimerEventType.Injury
+                                else -> TimerEventType.Stopped
+                            }
+                            EventBus.getDefault().postSticky( TimerEvent(text,type));
+                        }
+
+                    }
+                    //val text = String(message, 0, packet.length)
                     //Log.d("Received data", text)
-                    ProcessUDPMessage(text)
+                    //ProcessUDPMessage(text)
                 } catch (e: IOException) {
                     Log.e("UDP client has IOException", "error: ", e)
                     run = false
