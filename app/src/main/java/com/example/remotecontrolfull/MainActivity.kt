@@ -111,6 +111,7 @@ open class MainActivity : AppCompatActivity() {
         // Update the status (deal only with score for the main activity
         binding.textViewScoreLeft.text = event.ScoreLeft
         binding.textViewScoreRight.text = event.ScoreRight
+        binding.textViewRound.text = event.Round
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -267,5 +268,6 @@ fun PacketToStatusEvent(message: ByteArray):StatusEvent{
         String(message, 16, 2),String(message, 10, 2),  // Yellow Cards
         String(message, 18, 2),String(message, 12, 2),  // RedCards
         String(message, 20, 1),String(message, 14, 1), // Black Cards
-        String(message, 22, 1) )// Prio
+        String(message, 22, 1), // Prio
+        String(message, 24, 1), )// Round
 }

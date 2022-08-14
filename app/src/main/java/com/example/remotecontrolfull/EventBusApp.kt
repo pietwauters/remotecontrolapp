@@ -28,7 +28,8 @@ public class StatusEvent(
     val RedCardRight: String,
     val BlackCardLeft: String,
     val BlackCardRight: String,
-    val Prio: String
+    val Prio: String,
+    val Round: String
 )
 
 enum class RS422_FPAMessageType {
