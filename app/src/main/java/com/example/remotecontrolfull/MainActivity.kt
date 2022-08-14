@@ -73,6 +73,7 @@ fun sendUDP(cmd: ByteArray) {
 open class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var layout: ConstraintLayout
+    var previousType3Message = ByteArray(29)
 
     open fun ProcessUDPMessage(EFPMessage: String)
     {
@@ -93,7 +94,7 @@ open class MainActivity : AppCompatActivity() {
         super.onStop()
     }
     // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
-    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
     open fun onTimerEvent(event: TimerEvent) {
 
         binding.textViewTimer.text = event.time
@@ -104,7 +105,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
     // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
-    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
     open fun onStatusEvent(event: StatusEvent) {
 
         // Update the status (deal only with score for the main activity
@@ -200,17 +201,16 @@ open class ClientListen : Runnable , MainActivity() {
             val udpSocket = DatagramSocket(50112)
             val message = ByteArray(512)
             val packet = DatagramPacket(message, message.size)
-            //Log.i("UDP client: ", "about to wait to receive")
             while (run) {
                 try {
                     //Log.i("UDP client: ", "about to wait to receive")
                     udpSocket.receive(packet)
-                    Log.i("UDP client: ", "Received a packet")
-                    /*if(MessageType(message) == RS422_FPAMessageType.Timer)
-                        EventBus.getDefault().postSticky( PacketToTimerEvent(message))*/
                     when (MessageType(message)) {
                         RS422_FPAMessageType.Timer -> EventBus.getDefault().postSticky( PacketToTimerEvent(message))
-                        RS422_FPAMessageType.CompetitorStatus -> EventBus.getDefault().postSticky( PacketToStatusEvent(message))
+                        RS422_FPAMessageType.CompetitorStatus -> {
+                            if(!previousType3Message.contentEquals(message) ) {
+                                EventBus.getDefault().postSticky( PacketToStatusEvent(message))
+                                previousType3Message = message.copyOf() }}
                         else -> {}//Do nopthing
                         }
 
@@ -262,6 +262,10 @@ fun PacketToTimerEvent(message: ByteArray):TimerEvent{
 }
 
 fun PacketToStatusEvent(message: ByteArray):StatusEvent{
-    return StatusEvent(String(message, 7, 2),String(message, 4, 2))
-
+    return StatusEvent(
+        String(message, 7, 2), String(message, 4, 2),   // Score
+        String(message, 16, 2),String(message, 10, 2),  // Yellow Cards
+        String(message, 18, 2),String(message, 12, 2),  // RedCards
+        String(message, 20, 1),String(message, 14, 1), // Black Cards
+        String(message, 22, 1) )// Prio
 }

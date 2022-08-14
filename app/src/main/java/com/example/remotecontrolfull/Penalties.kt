@@ -7,11 +7,15 @@ import android.os.StrictMode
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentActivity
 import app.com.kotlinapp.OnSwipeTouchListener
 import com.example.remotecontrolfull.databinding.ActivityPenaltiesBinding
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -21,7 +25,79 @@ class Penalties : AppCompatActivity() {
 
     private lateinit var layout: ConstraintLayout
     lateinit var binding: ActivityPenaltiesBinding
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
 
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+    // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onStatusEvent(event: StatusEvent) {
+
+        // Update the status (deal only with score for the main activity
+        if(event.YellowCardLeft != " 0")
+        {
+            binding.textViewYellowCardLeft.text = event.YellowCardLeft.trim()
+            binding.textViewYellowCardLeft.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewYellowCardLeft.visibility = View.INVISIBLE
+        if(event.YellowCardRight != " 0")
+        {
+            binding.textViewYellowCardRight.text = event.YellowCardRight.trim()
+            binding.textViewYellowCardRight.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewYellowCardRight.visibility = View.INVISIBLE
+        if(event.RedCardLeft != " 0")
+        {
+            binding.textViewRedCardLeft.text = event.RedCardLeft.trim()
+            binding.textViewRedCardLeft.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewRedCardLeft.visibility = View.INVISIBLE
+        if(event.RedCardRight != " 0")
+        {
+            binding.textViewRedCardRight.text = event.RedCardRight.trim()
+            binding.textViewRedCardRight.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewRedCardRight.visibility = View.INVISIBLE
+        if(event.BlackCardLeft != "0")
+        {
+            binding.textViewBlackCardLeft.text = event.BlackCardLeft
+            binding.textViewBlackCardLeft.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewBlackCardLeft.visibility = View.INVISIBLE
+        if(event.BlackCardRight != "0")
+        {
+            binding.textViewBlackCardRight.text = event.BlackCardRight
+            binding.textViewBlackCardRight.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewBlackCardRight.visibility = View.INVISIBLE
+
+        if(event.Prio == "0"){
+            binding.textViewPrioLeft.visibility = View.INVISIBLE
+            binding.textViewPrioRight.visibility = View.INVISIBLE
+        }
+        else{
+            if(event.Prio == "1"){
+                binding.textViewPrioLeft.visibility = View.INVISIBLE
+                binding.textViewPrioRight.visibility = View.VISIBLE
+            }
+            else{
+                binding.textViewPrioLeft.visibility = View.VISIBLE
+                binding.textViewPrioRight.visibility = View.INVISIBLE
+            }
+        }
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_penalties)
