@@ -31,10 +31,15 @@ public class StatusEvent(
     val Prio: String,
     val Round: String
 )
+public class CompetitorEvent (
+    val side: SideOfEvent,
+    val CompetitorName: String
+)
 
 enum class RS422_FPAMessageType {
     Lights,Timer,CompetitorStatus,ApparatusStatus,CompetitorLeftInformation, CompetitorRightInformation, Unknown
 }
+
 
 class EventBusApp: Application() {
 

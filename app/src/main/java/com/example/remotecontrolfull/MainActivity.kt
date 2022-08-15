@@ -200,7 +200,7 @@ open class ClientListen : Runnable , MainActivity() {
         var run = true
         try {
             val udpSocket = DatagramSocket(50112)
-            val message = ByteArray(512)
+            val message = ByteArray(64)
             val packet = DatagramPacket(message, message.size)
             while (run) {
                 try {
@@ -212,7 +212,9 @@ open class ClientListen : Runnable , MainActivity() {
                             if(!previousType3Message.contentEquals(message) ) {
                                 EventBus.getDefault().postSticky( PacketToStatusEvent(message))
                                 previousType3Message = message.copyOf() }}
-                        else -> {}//Do nopthing
+                        RS422_FPAMessageType.CompetitorLeftInformation -> EventBus.getDefault().postSticky( PacketToCompetitorEvent(message))
+                        RS422_FPAMessageType.CompetitorRightInformation -> EventBus.getDefault().postSticky( PacketToCompetitorEvent(message))
+                        else -> {}//Do nothing
                         }
 
                 } catch (e: IOException) {
@@ -243,6 +245,14 @@ fun MessageType(message: ByteArray):RS422_FPAMessageType {
             ASCII_R,ASCII_N,ASCII_J,ASCII_B -> return RS422_FPAMessageType.Timer
             else -> return RS422_FPAMessageType.Unknown}
     }
+    if(message.elementAt(4)== STX) {// Type5-6-7-8-9
+        val typeindicator = String(message, 2, 2)
+        when (typeindicator) {
+            "NL" -> return RS422_FPAMessageType.CompetitorLeftInformation
+            "NR" -> return RS422_FPAMessageType.CompetitorRightInformation
+            "MC","UF","FC" -> return RS422_FPAMessageType.Unknown
+            else -> return RS422_FPAMessageType.Unknown}
+    }
     return RS422_FPAMessageType.Unknown
 }
 
@@ -270,4 +280,38 @@ fun PacketToStatusEvent(message: ByteArray):StatusEvent{
         String(message, 20, 1),String(message, 14, 1), // Black Cards
         String(message, 22, 1), // Prio
         String(message, 24, 1), )// Round
+}
+
+fun PacketToCompetitorEvent(message: ByteArray):CompetitorEvent{
+
+    // Extract name
+    var TheName = ""
+    var i = 0
+    var STXCount = 0
+    var SecondSTX = 0
+    var ThirdSTX = 0
+
+    while (i < message.size)
+    {
+        if(message[i] == STX) {
+            STXCount++
+            if(STXCount == 2)
+                SecondSTX = i
+            if(STXCount == 3)
+                ThirdSTX = i
+        }
+        if(message[i] == EOT) {
+            i == message.size
+        }
+        i++
+    }
+
+    val length = ThirdSTX-SecondSTX-1
+    if((SecondSTX != 0) && (ThirdSTX != 0) &&  (length > 0))
+        TheName = String(message, SecondSTX+1, length)
+
+    if(String(message, 3, 1) == "L") {
+        return CompetitorEvent(SideOfEvent.Left, TheName  )  }
+    else{
+        return CompetitorEvent(SideOfEvent.Right, TheName)}
 }

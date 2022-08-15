@@ -1,10 +1,12 @@
 package com.example.remotecontrolfull
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GestureDetectorCompat
@@ -12,6 +14,9 @@ import androidx.fragment.app.FragmentActivity
 import app.com.kotlinapp.OnSwipeTouchListener
 import com.example.remotecontrolfull.databinding.ActivityCyranoBinding
 import com.example.remotecontrolfull.databinding.ActivityPenaltiesBinding
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -31,14 +36,34 @@ class Cyrano : AppCompatActivity() {
 
     private lateinit var layout: ConstraintLayout
     private lateinit var binding: ActivityCyranoBinding
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onTimerEvent(event: CompetitorEvent) {
+        if(event.side == SideOfEvent.Left)
+            binding.textViewNameLeft.setText(event.CompetitorName)
+        else
+            binding.textViewNameRight.setText(event.CompetitorName)
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cyrano)
         binding = ActivityCyranoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setTitle("Cyrano");
-        supportActionBar?.setHomeButtonEnabled(true);
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        //supportActionBar?.setHomeButtonEnabled(true);
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.hide()
+        //binding.btnReserveLeft.visibility = View.INVISIBLE
+        //binding.btnReserveRight.visibility = View.INVISIBLE
 
         binding.btnPrevMatch.setOnClickListener {
             sendUDP(UI_INPUT_CYRANO_PREV)

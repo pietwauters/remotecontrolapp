@@ -4,45 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:id="@+id/CyranoLayout"
     tools:context=".Cyrano">
+
+    <TextView
+        android:id="@+id/textViewNameLeft"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="#E91E63"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewNameRight"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Name left competitor" />
+
+    <TextView
+        android:id="@+id/textViewNameRight"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="right "
+        android:textColor="#4CAF50"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="" />
+
     <Button
         android:id="@+id/btnPrevMatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginBottom="18dp"
         android:text="Prev"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/btnBeginMatch" />
+
     <Button
         android:id="@+id/btnBeginMatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginBottom="16dp"
         android:text="Begin"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnPrevMatch" />
+        app:layout_constraintBottom_toTopOf="@id/btnReserveLeft"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/btnNextMatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginBottom="18dp"
         android:text="Next"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/btnEndMatch" />
+
     <Button
         android:id="@+id/btnEndMatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginBottom="16dp"
         android:text="End"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnNextMatch" />
+        app:layout_constraintBottom_toTopOf="@id/btnReserveRight"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/btnReserveLeft"
@@ -67,11 +99,11 @@
         android:id="@+id/btnSwapSides"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginBottom="18dp"
         android:text="Swap Sides"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnEndMatch" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
