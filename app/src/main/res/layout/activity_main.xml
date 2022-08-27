@@ -11,12 +11,15 @@
 
     <Button
         android:id="@+id/btnstart_stop"
-        android:layout_width="match_parent"
-        android:layout_height="175dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/startstop"
-        app:layout_constraintBottom_toTopOf="@+id/btnreset"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnBNextPause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDecrRightScore" />
@@ -74,6 +77,7 @@
         android:text="-"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnIncrRightScore" />
+
     <TextView
         android:id="@+id/textViewTimer"
         android:layout_width="wrap_content"
@@ -81,6 +85,7 @@
         android:layout_marginTop="24dp"
         android:text="3:00"
         android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -105,6 +110,7 @@
         android:text="0"
         android:textColor="#E91E63"
         android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/textViewTimer"
         tools:text="L" />
@@ -117,8 +123,19 @@
         android:text="0"
         android:textColor="#4CAF50"
         android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textViewTimer"
         tools:text="R" />
+
+    <Button
+        android:id="@+id/btnBNextPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next / Pause"
+        app:layout_constraintBottom_toTopOf="@+id/btnreset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
