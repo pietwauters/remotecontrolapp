@@ -56,6 +56,7 @@ val UI_INPUT_RESTORE_UW2F_TIMER = byteArrayOf(0x19,0x00,0x00,0x06)
 val UI_BUZZ = byteArrayOf(0x18,0x00,0x00,0x06)
 val UI_MINUTE_BREAK = byteArrayOf(0x20,0x00,0x00,0x06)
 val UI_NEXT_PERIOD = byteArrayOf(0x21,0x00,0x00,0x06)
+val UI_INPUT_CYCLE_BRIGHTNESS = byteArrayOf(0x30,0x00,0x00,0x06)
 
 fun sendUDP(cmd: ByteArray) {
     // Hack Prevent crash (sending should be done using an async task)
@@ -142,8 +143,16 @@ open class MainActivity : AppCompatActivity() {
         binding.btnDecrRightScore.setOnClickListener {
             sendUDP(UI_INPUT_DECR_SCORE_RIGHT)
         }
-        binding.btnBNextPause.setOnClickListener {
+        binding.btnBNextPause.setOnLongClickListener {
             sendUDP(UI_NEXT_PERIOD)
+            val vibrator: Vibrator
+            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(150)
+            true
+        }
+
+        binding.btnBNextPause.setOnClickListener {
+            Toast.makeText(applicationContext, "Do a LONG Press to go break or next round!", Toast.LENGTH_SHORT).show()
         }
         binding.btnreset.setOnClickListener() {
             Toast.makeText(applicationContext, "To Reset do a LONG Press!", Toast.LENGTH_SHORT).show()

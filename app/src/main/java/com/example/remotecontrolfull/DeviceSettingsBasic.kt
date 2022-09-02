@@ -20,7 +20,9 @@ class DeviceSettingsBasic : AppCompatActivity() {
         setTitle("Basic Device Settings");
         //supportActionBar?.setHomeButtonEnabled(true);
         //supportActionBar?.setDisplayHomeAsUpEnabled(true);
-
+        binding.btnCycleIntensity.setOnClickListener {
+            sendUDP(UI_INPUT_CYCLE_BRIGHTNESS)
+        }
         binding.btnCycleWeapon.setOnClickListener {
             sendUDP(UI_INPUT_CYCLE_WEAPON)
         }
