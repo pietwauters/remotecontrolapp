@@ -7,6 +7,7 @@
     android:keepScreenOn="true"
     android:orientation="vertical"
     android:id="@+id/MainActivityLayout"
+    android:filterTouchesWhenObscured="true"
     tools:context=".MainActivity">
 
     <Button

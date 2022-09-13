@@ -5,6 +5,7 @@
     android:id="@+id/PenaltiesLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:filterTouchesWhenObscured="true"
     tools:context=".Penalties">
 
     <TextView
