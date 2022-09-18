@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Color.red
-import android.os.Bundle
-import android.os.StrictMode
-import android.os.Vibrator
+import android.os.*
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -82,6 +80,24 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var layout: ConstraintLayout
     var previousType3Message = ByteArray(29)
 
+    fun vibrate(duration : Long){
+        val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vib.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE) )
+        }else{
+            @Suppress("DEPRECATION")
+            vib.vibrate(duration)
+        }
+    }
+
     open fun ProcessUDPMessage(EFPMessage: String)
     {
         //Do Something interesting
@@ -130,9 +146,7 @@ open class MainActivity : AppCompatActivity() {
 
         binding.btnstartStop.setOnClickListener {
             sendUDP(UI_INPUT_TOGGLE_TIMER)
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
+            vibrate(150)
         }
         binding.btnIncrLeftScore.setOnClickListener {
             sendUDP(UI_INPUT_INCR_SCORE_LEFT)
@@ -149,9 +163,7 @@ open class MainActivity : AppCompatActivity() {
         }
         binding.btnBNextPause.setOnLongClickListener {
             sendUDP(UI_NEXT_PERIOD)
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
+            vibrate(150)
             true
         }
 
@@ -163,9 +175,7 @@ open class MainActivity : AppCompatActivity() {
         }
         binding.btnreset.setOnLongClickListener {
 
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
+            vibrate(150)
             sendUDP(UI_INPUT_RESET)
             true
         }

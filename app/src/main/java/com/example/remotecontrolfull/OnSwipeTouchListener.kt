@@ -1,11 +1,19 @@
 package app.com.kotlinapp
 import android.content.Context
+import android.content.Context.VIBRATOR_SERVICE
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import androidx.core.content.ContextCompat.getSystemService
 import kotlin.math.abs
+
+
 internal open class OnSwipeTouchListener(c: Context?) :
     OnTouchListener {
     private val gestureDetector: GestureDetector
@@ -82,3 +90,4 @@ internal open class OnSwipeTouchListener(c: Context?) :
         gestureDetector = GestureDetector(c, GestureListener())
     }
 }
+

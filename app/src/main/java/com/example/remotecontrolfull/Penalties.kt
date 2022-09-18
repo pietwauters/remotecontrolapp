@@ -2,19 +2,18 @@ package com.example.remotecontrolfull
 
 import android.content.Intent
 import android.content.Context
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import android.os.Vibrator
 import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentActivity
 import app.com.kotlinapp.OnSwipeTouchListener
+
 import com.example.remotecontrolfull.databinding.ActivityPenaltiesBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -37,6 +36,24 @@ class Penalties : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
         super.onStop()
     }
+    fun vibrate(duration : Long){
+        val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vib.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE) )
+        }else{
+            @Suppress("DEPRECATION")
+            vib.vibrate(duration)
+        }
+    }
+
     // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
     public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
     open fun onStatusEvent(event: StatusEvent) {
@@ -154,34 +171,25 @@ class Penalties : AppCompatActivity() {
         // From here we have the reverse functions for the cards
         binding.btnIncrYellowCardLeft.setOnLongClickListener {
             sendUDP(UI_INPUT_YELLOW_CARD_LEFT_DECR)
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
+            vibrate(150)
             true
         }
 
         binding.btnIncrYellowCardRight.setOnLongClickListener {
             sendUDP(UI_INPUT_YELLOW_CARD_RIGHT_DECR)
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
+            vibrate(150)
             true
         }
 
         binding.btnIncrRedCardLeft.setOnLongClickListener {
             sendUDP(UI_INPUT_RED_CARD_LEFT_DECR)
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
+            vibrate(150)
             true
         }
 
         binding.btnIncrRedCardRight.setOnLongClickListener {
             sendUDP(UI_INPUT_RED_CARD_RIGHT_DECR)
-            val vibrator: Vibrator
-            vibrator = getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(150)
-
+            vibrate(150)
             true
         }
     }
