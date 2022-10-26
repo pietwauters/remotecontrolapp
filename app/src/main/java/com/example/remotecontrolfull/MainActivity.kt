@@ -60,6 +60,7 @@ val UI_MINUTE_BREAK = byteArrayOf(0x20,0x00,0x00,0x06)
 val UI_NEXT_PERIOD = byteArrayOf(0x21,0x00,0x00,0x06)
 val UI_INPUT_CYCLE_BRIGHTNESS = byteArrayOf(0x30,0x00,0x00,0x06)
 
+
 fun sendUDP(cmd: ByteArray) {
     // Hack Prevent crash (sending should be done using an async task)
     val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -246,12 +247,12 @@ open class ClientListen : Runnable , MainActivity() {
                         }
 
                 } catch (e: IOException) {
-                    Log.e("UDP client has IOException", "error: ", e)
+                    //Log.e("UDP client has IOException", "error: ", e)
                     run = false
                 }
             }
         } catch (e: IOException) {
-            Log.e("UDP client has IOException", "error: ", e)
+            //Log.e("UDP client has IOException", "error: ", e)
             run = false
         }
     }
