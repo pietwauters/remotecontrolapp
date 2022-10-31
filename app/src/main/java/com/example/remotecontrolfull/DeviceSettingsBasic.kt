@@ -2,13 +2,14 @@ package com.example.remotecontrolfull
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ScrollView
 import androidx.constraintlayout.widget.ConstraintLayout
 import app.com.kotlinapp.OnSwipeTouchListener
 import com.example.remotecontrolfull.databinding.ActivityCyranoBinding
 import com.example.remotecontrolfull.databinding.ActivityDeviceSettingsBasicBinding
 
 class DeviceSettingsBasic : AppCompatActivity() {
-    private lateinit var layout: ConstraintLayout
+    private lateinit var layout: ScrollView
     private lateinit var binding: ActivityDeviceSettingsBasicBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
