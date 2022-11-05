@@ -117,40 +117,15 @@
         app:layout_constraintTop_toBottomOf="@+id/btnCycleIntensity" />
 
 
-    <TextView
-        android:id="@+id/textViewPisteID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:autoText="false"
-        android:paddingRight="8dp"
-        android:text="Enter The Piste number here"
-        app:barrierMargin="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider3"
-        app:layout_wrapBehaviorInParent="included" />
-
-
-    <EditText
-        android:id="@+id/editTextNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPisteID" />
-
-    <Button
-        android:id="@+id/btnSetPisteID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Set"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+        <Button
+            android:id="@+id/btnStartWifiPortal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Start WifiPortal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/devider3" />
 
 
     </LinearLayout>

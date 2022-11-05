@@ -19,6 +19,10 @@ import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.os.Handler
+import android.os.Looper
 
 
 public class SoftOptions {
@@ -80,6 +84,7 @@ open class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var layout: ConstraintLayout
     var previousType3Message = ByteArray(29)
+    var Beeping = false
 
     fun vibrate(duration : Long){
         val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -117,6 +122,24 @@ open class MainActivity : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
         super.onStop()
     }
+    // This method will be called when a LightsEven is posted (in the UI thread for Toast)
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onTimerEvent(event: LightsEvent) {
+
+        if(!Beeping)
+        {
+            if((event.Red) || (event.Green))
+            {
+                ToneGenerator(AudioManager.STREAM_MUSIC, 100).startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_NORMAL, 1400)
+                vibrate(600)
+                Beeping = true
+            }
+        }
+        if((!event.Red) && (!event.Green))
+            Beeping = false
+
+    }
+
     // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
     public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
     open fun onTimerEvent(event: TimerEvent) {
@@ -222,6 +245,7 @@ const val ASCII_D:Byte = 0x44
 const val ASCII_I:Byte  = 0x49
 const val ASCII_J:Byte  = 0x4a
 const val ASCII_B:Byte  = 0x42
+const val ASCII_1:Byte = 0x31
 
 
 open class ClientListen : Runnable , MainActivity() {
@@ -243,6 +267,8 @@ open class ClientListen : Runnable , MainActivity() {
                                 previousType3Message = message.copyOf() }}
                         RS422_FPAMessageType.CompetitorLeftInformation -> EventBus.getDefault().postSticky( PacketToCompetitorEvent(message))
                         RS422_FPAMessageType.CompetitorRightInformation -> EventBus.getDefault().postSticky( PacketToCompetitorEvent(message))
+                        RS422_FPAMessageType.RemoteControl -> EventBus.getDefault().postSticky( PacketToRemoteControlEvent(message))
+                        RS422_FPAMessageType.Lights -> EventBus.getDefault().postSticky( PacketToLightsEvent(message))
                         else -> {}//Do nothing
                         }
 
@@ -279,7 +305,9 @@ fun MessageType(message: ByteArray):RS422_FPAMessageType {
         when (typeindicator) {
             "NL" -> return RS422_FPAMessageType.CompetitorLeftInformation
             "NR" -> return RS422_FPAMessageType.CompetitorRightInformation
-            "MC","UF","FC" -> return RS422_FPAMessageType.Unknown
+            "MC" -> return RS422_FPAMessageType.CompetitionInformation
+            "UF" -> return RS422_FPAMessageType.UW2F
+            "FC" -> return RS422_FPAMessageType.RemoteControl
             else -> return RS422_FPAMessageType.Unknown}
     }
     return RS422_FPAMessageType.Unknown
@@ -300,6 +328,26 @@ fun PacketToTimerEvent(message: ByteArray):TimerEvent{
     return TimerEvent(text,type)
 
 }
+fun PacketToLightsEvent(message: ByteArray):LightsEvent{
+
+    var red : Boolean = false
+    var green : Boolean = false
+    var whiteleft : Boolean = false
+    var whiteright : Boolean = false
+
+    if(message.elementAt(3)== ASCII_1)
+        red = true
+    if(message.elementAt(5)== ASCII_1)
+        green = true
+    if(message.elementAt(7)== ASCII_1)
+        whiteleft = true
+    if(message.elementAt(9)== ASCII_1)
+        whiteright = true
+
+    return LightsEvent(red,green,whiteleft,whiteright)
+
+}
+
 
 fun PacketToStatusEvent(message: ByteArray):StatusEvent{
     return StatusEvent(
@@ -309,6 +357,23 @@ fun PacketToStatusEvent(message: ByteArray):StatusEvent{
         String(message, 20, 1),String(message, 14, 1), // Black Cards
         String(message, 22, 1), // Prio
         String(message, 24, 1), )// Round
+}
+
+fun PacketToRemoteControlEvent(message: ByteArray):RemoteControlEvent{
+
+    var TheValue = ""
+    var i = 5
+    var length = 0;
+    while (i < message.size)
+    {
+        if(message[i] == EOT) {
+            i == message.size
+        }
+        length++;
+        i++
+    }
+    return RemoteControlEvent(
+        String(message, 5, length) )// Value
 }
 
 fun PacketToCompetitorEvent(message: ByteArray):CompetitorEvent{

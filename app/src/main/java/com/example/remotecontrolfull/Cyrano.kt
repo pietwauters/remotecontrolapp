@@ -74,6 +74,7 @@ class Cyrano : AppCompatActivity() {
 
         binding.btnBeginMatch.setOnClickListener {
             sendUDP(UI_INPUT_CYRANO_BEGIN)
+            finish()
         }
         binding.btnEndMatch.setOnClickListener {
             sendUDP(UI_INPUT_CYRANO_END)

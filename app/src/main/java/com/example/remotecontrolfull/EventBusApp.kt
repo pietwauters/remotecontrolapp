@@ -36,8 +36,20 @@ public class CompetitorEvent (
     val CompetitorName: String
 )
 
+public class RemoteControlEvent (
+    val Value: String
+)
+
+public class LightsEvent (
+    val Red: Boolean,
+    val Green: Boolean,
+    val WhiteLeft: Boolean,
+    val WhiteRight: Boolean
+
+)
+
 enum class RS422_FPAMessageType {
-    Lights,Timer,CompetitorStatus,ApparatusStatus,CompetitorLeftInformation, CompetitorRightInformation, Unknown
+    Lights,Timer,CompetitorStatus,ApparatusStatus,CompetitorLeftInformation, CompetitorRightInformation, CompetitionInformation, UW2F, RemoteControl,Unknown
 }
 
 
