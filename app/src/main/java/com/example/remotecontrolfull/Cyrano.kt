@@ -33,6 +33,12 @@ val UI_RESERVE_RIGHT = byteArrayOf(0x1c,0x00,0x00,0x06)
 
 
 class Cyrano : AppCompatActivity() {
+    companion object StoredValues{
+        var NameLeft = "Left"
+        var NameRight = "Right"
+        var ScoreLeft = ""
+        var ScoreRight = "";
+    }
 
     private lateinit var layout: ConstraintLayout
     private lateinit var binding: ActivityCyranoBinding
@@ -46,13 +52,29 @@ class Cyrano : AppCompatActivity() {
         super.onStop()
     }
     public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
-    open fun onTimerEvent(event: CompetitorEvent) {
+    open fun onCompetitiorEvent(event: CompetitorEvent) {
         if(event.side == SideOfEvent.Left)
-            binding.textViewNameLeft.setText(event.CompetitorName)
+        {
+            StoredValues.NameLeft = event.CompetitorName
+            binding.textViewNameLeft.text= event.CompetitorName
+        }
+
         else
-            binding.textViewNameRight.setText(event.CompetitorName)
+        {
+            StoredValues.NameRight = event.CompetitorName
+            binding.textViewNameRight.text = event.CompetitorName
+        }
+
 
     }
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onStatusEvent(event: StatusEvent) {
+        binding.textViewScoreLeftCyrano.text = event.ScoreLeft
+        binding.textViewScoreRightCyrano.text = event.ScoreRight
+        StoredValues.ScoreLeft = event.ScoreLeft
+        StoredValues.ScoreRight = event.ScoreRight
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cyrano)
@@ -64,6 +86,10 @@ class Cyrano : AppCompatActivity() {
         supportActionBar?.hide()
         //binding.btnReserveLeft.visibility = View.INVISIBLE
         //binding.btnReserveRight.visibility = View.INVISIBLE
+        binding.textViewNameLeft.text = StoredValues.NameLeft
+        binding.textViewNameRight.text = StoredValues.NameRight
+        binding.textViewScoreLeftCyrano.text = StoredValues.ScoreRight
+        binding.textViewScoreRightCyrano.text = StoredValues.ScoreRight
 
         binding.btnPrevMatch.setOnClickListener {
             sendUDP(UI_INPUT_CYRANO_PREV)
@@ -78,6 +104,9 @@ class Cyrano : AppCompatActivity() {
         }
         binding.btnEndMatch.setOnClickListener {
             sendUDP(UI_INPUT_CYRANO_END)
+        }
+        binding.btnSwapSides.setOnClickListener {
+            sendUDP(UI_SWAP_FENCERS)
         }
 
         layout = findViewById(R.id.CyranoLayout)

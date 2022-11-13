@@ -40,6 +40,10 @@ public class RemoteControlEvent (
     val Value: String
 )
 
+public class ApparatusStatusEvent (
+    val Value: String
+)
+
 public class LightsEvent (
     val Red: Boolean,
     val Green: Boolean,

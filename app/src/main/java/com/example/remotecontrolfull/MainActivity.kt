@@ -85,6 +85,8 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var layout: ConstraintLayout
     var previousType3Message = ByteArray(29)
     var Beeping = false
+    var Buzzing = false
+    var TimerIsRunning = false
 
     fun vibrate(duration : Long){
         val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -124,19 +126,28 @@ open class MainActivity : AppCompatActivity() {
     }
     // This method will be called when a LightsEven is posted (in the UI thread for Toast)
     public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
-    open fun onTimerEvent(event: LightsEvent) {
+    open fun onLightsEvent(event: LightsEvent) {
 
         if(!Beeping)
         {
             if((event.Red) || (event.Green))
             {
                 ToneGenerator(AudioManager.STREAM_MUSIC, 100).startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_NORMAL, 1400)
-                vibrate(600)
+
+                if(!Buzzing)
+                    vibrate(600)
                 Beeping = true
+                Buzzing = true
             }
         }
+
+
         if((!event.Red) && (!event.Green))
+        {
             Beeping = false
+            Buzzing = false
+        }
+
 
     }
 
@@ -145,10 +156,25 @@ open class MainActivity : AppCompatActivity() {
     open fun onTimerEvent(event: TimerEvent) {
 
         binding.textViewTimer.text = event.time
-        if(event.Type == TimerEventType.Running)
+        // only react on state changes
+        if(((event.Type == TimerEventType.Running) && TimerIsRunning) || ((event.Type != TimerEventType.Running) && !TimerIsRunning))
+            return;
+        if(event.Type == TimerEventType.Running) {
             binding.textViewTimer.setTextColor(Color.parseColor("#4c8c4a"))
-        else
+            vibrate(300)
+            TimerIsRunning = true
+        }
+        else{
             binding.textViewTimer.setTextColor(Color.parseColor("#404070"))
+            if(TimerIsRunning)
+            {
+                ToneGenerator(AudioManager.STREAM_MUSIC, 100).startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_NORMAL, 1400)
+                vibrate(600)
+                Beeping = true
+                Buzzing = true
+            }
+            TimerIsRunning = false
+        }
     }
 
     // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
@@ -170,7 +196,7 @@ open class MainActivity : AppCompatActivity() {
 
         binding.btnstartStop.setOnClickListener {
             sendUDP(UI_INPUT_TOGGLE_TIMER)
-            vibrate(150)
+            //vibrate(150)
         }
         binding.btnIncrLeftScore.setOnClickListener {
             sendUDP(UI_INPUT_INCR_SCORE_LEFT)
