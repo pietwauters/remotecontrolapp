@@ -11,8 +11,7 @@ import com.example.remotecontrolfull.databinding.ActivityDeviceSettingsBasicBind
 import android.content.Intent
 import android.net.Uri
 
-val UI_START_WIFI_PORTAL = byteArrayOf(0x00,0x00,0x02,0x06)
-val UI_START_OTA_PORTAL = byteArrayOf(0x00,0x00,0x03,0x06)
+
 
 class DeviceSettingsBasic : AppCompatActivity() {
     private lateinit var layout: ScrollView
@@ -37,36 +36,7 @@ class DeviceSettingsBasic : AppCompatActivity() {
             sendUDP(UI_INPUT_ROUND)
         }
 
-        binding.btnStartWifiPortal.setOnLongClickListener {
-            sendUDP(UI_START_WIFI_PORTAL)
-            val openURL = Intent(android.content.Intent.ACTION_VIEW)
-            openURL.data = Uri.parse("http://192.168.4.1")
-            startActivity(openURL)
-            true
-        }
 
-        binding.btnStartWifiPortal.setOnClickListener {
-            Toast.makeText(
-                applicationContext,
-                "Do a LONG Press to start the Wifi Portal!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        binding.btnStartOTAPortal.setOnLongClickListener {
-            sendUDP(UI_START_OTA_PORTAL)
-            val openURL = Intent(android.content.Intent.ACTION_VIEW)
-            openURL.data = Uri.parse("http://192.168.4.1/update")
-            startActivity(openURL)
-            true
-        }
-
-        binding.btnStartOTAPortal.setOnClickListener {
-            Toast.makeText(
-                applicationContext,
-                "Do a LONG Press to start the OTA Update Portal!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
         layout = findViewById(R.id.DeviceSettingsBasicLayout)
         layout.setOnTouchListener(object : OnSwipeTouchListener(this@DeviceSettingsBasic) {
             override fun onSwipeLeft() {
@@ -77,6 +47,8 @@ class DeviceSettingsBasic : AppCompatActivity() {
             }
             override fun onSwipeUp() {
                 super.onSwipeUp()
+                val intent = Intent(this@DeviceSettingsBasic, ExpertSettings::class.java)
+                startActivity(intent)
             }
             override fun onSwipeDown() {
                 super.onSwipeDown()
