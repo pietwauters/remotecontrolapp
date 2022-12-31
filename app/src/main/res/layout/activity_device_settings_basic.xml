@@ -126,6 +126,15 @@
             android:text="Start WifiPortal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/devider3" />
+        <Button
+            android:id="@+id/btnStartOTAPortal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Start OTAPortal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnStartWifiPortal" />
 
 
     </LinearLayout>

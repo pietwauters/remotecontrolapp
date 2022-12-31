@@ -108,6 +108,12 @@ class Cyrano : AppCompatActivity() {
         binding.btnSwapSides.setOnClickListener {
             sendUDP(UI_SWAP_FENCERS)
         }
+        binding.btnReserveLeft.setOnClickListener {
+            sendUDP(UI_RESERVE_LEFT)
+        }
+        binding.btnReserveRight.setOnClickListener {
+            sendUDP(UI_RESERVE_RIGHT)
+        }
 
         layout = findViewById(R.id.CyranoLayout)
         layout.setOnTouchListener(object : OnSwipeTouchListener(this@Cyrano) {

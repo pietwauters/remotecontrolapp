@@ -12,6 +12,7 @@ import android.content.Intent
 import android.net.Uri
 
 val UI_START_WIFI_PORTAL = byteArrayOf(0x00,0x00,0x02,0x06)
+val UI_START_OTA_PORTAL = byteArrayOf(0x00,0x00,0x03,0x06)
 
 class DeviceSettingsBasic : AppCompatActivity() {
     private lateinit var layout: ScrollView
@@ -48,6 +49,21 @@ class DeviceSettingsBasic : AppCompatActivity() {
             Toast.makeText(
                 applicationContext,
                 "Do a LONG Press to start the Wifi Portal!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        binding.btnStartOTAPortal.setOnLongClickListener {
+            sendUDP(UI_START_OTA_PORTAL)
+            val openURL = Intent(android.content.Intent.ACTION_VIEW)
+            openURL.data = Uri.parse("http://192.168.4.1/update")
+            startActivity(openURL)
+            true
+        }
+
+        binding.btnStartOTAPortal.setOnClickListener {
+            Toast.makeText(
+                applicationContext,
+                "Do a LONG Press to start the OTA Update Portal!",
                 Toast.LENGTH_SHORT
             ).show()
         }
