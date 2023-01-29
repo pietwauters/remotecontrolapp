@@ -10,7 +10,7 @@ import com.example.remotecontrolfull.databinding.ActivityExpertSettingsBinding
 
 val UI_START_WIFI_PORTAL = byteArrayOf(0x00,0x00,0x02,0x06)
 val UI_START_OTA_PORTAL = byteArrayOf(0x00,0x00,0x03,0x06)
-
+val UI_CONNECT_TO_WIFI = byteArrayOf(0x00,0x00,0x04,0x06)
 
 class ExpertSettings : AppCompatActivity() {
 
@@ -35,6 +35,9 @@ class ExpertSettings : AppCompatActivity() {
                 "Do a LONG Press to start the Wifi Portal!",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+        binding.btnConnectWiFi.setOnClickListener {
+            sendUDP(UI_CONNECT_TO_WIFI)
         }
         binding.btnStartOTAPortal.setOnLongClickListener {
             sendUDP(UI_START_OTA_PORTAL)

@@ -38,6 +38,7 @@ class Cyrano : AppCompatActivity() {
         var NameRight = "Right"
         var ScoreLeft = ""
         var ScoreRight = "";
+        var CyranoStatus = "";
     }
 
     private lateinit var layout: ConstraintLayout
@@ -74,6 +75,12 @@ class Cyrano : AppCompatActivity() {
         StoredValues.ScoreLeft = event.ScoreLeft
         StoredValues.ScoreRight = event.ScoreRight
     }
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onExtraInfoEvent(event: ExtraInfoEvent) {
+        binding.textViewCyranoStatus.text = event.CyranoStatus
+        StoredValues.CyranoStatus = event.CyranoStatus
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +97,7 @@ class Cyrano : AppCompatActivity() {
         binding.textViewNameRight.text = StoredValues.NameRight
         binding.textViewScoreLeftCyrano.text = StoredValues.ScoreRight
         binding.textViewScoreRightCyrano.text = StoredValues.ScoreRight
+        binding.textViewCyranoStatus.text = StoredValues.CyranoStatus
 
         binding.btnPrevMatch.setOnClickListener {
             sendUDP(UI_INPUT_CYRANO_PREV)

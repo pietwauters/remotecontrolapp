@@ -186,6 +186,13 @@ open class MainActivity : AppCompatActivity() {
         binding.textViewScoreRight.text = event.ScoreRight
         binding.textViewRound.text = event.Round
     }
+    // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onExtraInfoEvent(event: ExtraInfoEvent) {
+
+        // Update the status (deal only with score for the main activity
+        binding.btnstartStop.setText("Piste " +event.PistID + "\n\nStart\nStop")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -295,6 +302,7 @@ open class ClientListen : Runnable , MainActivity() {
                         RS422_FPAMessageType.CompetitorRightInformation -> EventBus.getDefault().postSticky( PacketToCompetitorEvent(message))
                         RS422_FPAMessageType.RemoteControl -> EventBus.getDefault().postSticky( PacketToRemoteControlEvent(message))
                         RS422_FPAMessageType.Lights -> EventBus.getDefault().postSticky( PacketToLightsEvent(message))
+                        RS422_FPAMessageType.ExtraInfo -> EventBus.getDefault().postSticky( PacketToExtraInfoEvent(message))
                         else -> {}//Do nothing
                         }
 
@@ -326,7 +334,7 @@ fun MessageType(message: ByteArray):RS422_FPAMessageType {
             ASCII_R,ASCII_N,ASCII_J,ASCII_B -> return RS422_FPAMessageType.Timer
             else -> return RS422_FPAMessageType.Unknown}
     }
-    if(message.elementAt(4)== STX) {// Type5-6-7-8-9
+    if(message.elementAt(4)== STX) {// Type5-6-7-8-9-10
         val typeindicator = String(message, 2, 2)
         when (typeindicator) {
             "NL" -> return RS422_FPAMessageType.CompetitorLeftInformation
@@ -334,6 +342,7 @@ fun MessageType(message: ByteArray):RS422_FPAMessageType {
             "MC" -> return RS422_FPAMessageType.CompetitionInformation
             "UF" -> return RS422_FPAMessageType.UW2F
             "FC" -> return RS422_FPAMessageType.RemoteControl
+            "CS" -> return RS422_FPAMessageType.ExtraInfo
             else -> return RS422_FPAMessageType.Unknown}
     }
     return RS422_FPAMessageType.Unknown
@@ -434,4 +443,12 @@ fun PacketToCompetitorEvent(message: ByteArray):CompetitorEvent{
         return CompetitorEvent(SideOfEvent.Left, TheName  )  }
     else{
         return CompetitorEvent(SideOfEvent.Right, TheName)}
+}
+
+fun PacketToExtraInfoEvent(message: ByteArray):ExtraInfoEvent{
+
+    val text = String(message, 5, 3)
+    val text1 = "" + message[13].toUByte() + "." + message[15].toUByte() + "." + message[17].toUByte() + "." + message[19].toUByte();
+    return ExtraInfoEvent(text,text1)
+
 }
