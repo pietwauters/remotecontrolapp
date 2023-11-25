@@ -42,6 +42,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    namespace 'com.example.remotecontrolfull'
 }
 apply plugin: 'kotlin-kapt' // ensure kapt plugin is applied
 dependencies {
