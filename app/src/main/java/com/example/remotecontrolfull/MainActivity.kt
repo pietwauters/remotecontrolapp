@@ -23,8 +23,8 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Handler
 import android.os.Looper
-
-
+import android.view.View
+import android.os.Bundle
 public class SoftOptions {
     var RemoteHost: String = "192.168.4.1"
     var RemotePort: Int = 1234
@@ -81,12 +81,17 @@ fun sendUDP(cmd: ByteArray) {
 }
 
 open class MainActivity : AppCompatActivity() {
+    companion object StoredValues{
+        var UIMode = false
+    }
+
     lateinit var binding: ActivityMainBinding
     private lateinit var layout: ConstraintLayout
     var previousType3Message = ByteArray(29)
     var Beeping = false
     var Buzzing = false
     var TimerIsRunning = false
+
 
     fun vibrate(duration : Long){
         val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -119,7 +124,19 @@ open class MainActivity : AppCompatActivity() {
         super.onStart()
         EventBus.getDefault().register(this)
     }
+    override fun onResume() {
+        super.onResume()
+        SetSimpleUIMode()
 
+    }
+    override fun onPause()
+    {
+        super.onPause()
+        val sharedPreferences = getPreferences( MODE_PRIVATE)
+        val myEdit = sharedPreferences.edit()
+        myEdit.putBoolean("usesimpleUI", StoredValues.UIMode)
+        myEdit.apply()
+    }
     override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
@@ -193,13 +210,33 @@ open class MainActivity : AppCompatActivity() {
         // Update the status (deal only with score for the main activity
         binding.btnstartStop.setText("Piste " +event.PistID + "\n\nStart\nStop")
     }
+    fun SetSimpleUIMode()
+    {
+        if(StoredValues.UIMode)
+        {
+            binding.textViewScoreLeft.visibility = View.GONE
+            binding.textViewTimer.visibility = View.GONE
+            binding.textViewScoreRight.visibility = View.GONE
+            binding.textViewRound.visibility = View.GONE
+        }
+        else
+        {
+            binding.textViewScoreLeft.visibility = View.VISIBLE
+            binding.textViewTimer.visibility = View.VISIBLE
+            binding.textViewScoreRight.visibility = View.VISIBLE
+            binding.textViewRound.visibility = View.VISIBLE
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-
+        val sh = getPreferences(MODE_PRIVATE)
+        val a = sh.getBoolean("usesimpleUI", false)
+        StoredValues.UIMode = a
+        SetSimpleUIMode()
 
         binding.btnstartStop.setOnClickListener {
             sendUDP(UI_INPUT_TOGGLE_TIMER)
@@ -252,6 +289,7 @@ open class MainActivity : AppCompatActivity() {
                 super.onSwipeUp()
                 val intent = Intent(this@MainActivity, DeviceSettingsBasic::class.java)
                 startActivity(intent)
+
             }
             override fun onSwipeDown() {
                 super.onSwipeDown()

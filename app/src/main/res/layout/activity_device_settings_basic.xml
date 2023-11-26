@@ -119,5 +119,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCycleIntensity" />
 
+        <Switch
+            android:id="@+id/switchMode"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Switch to Simple UI mode" />
+
     </LinearLayout>
 </ScrollView>

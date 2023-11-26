@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primaryColor">#1565c0</color>
+    <color name="primaryColor">#17375E</color>
     <color name="primaryLightColor">#5e92f3</color>
     <color name="primaryDarkColor">#003c8f</color>
     <color name="secondaryColor">#1b5e20</color>
@@ -16,4 +16,5 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="timergreen">#4c8c4a</color>
+    <color name="button_background">#17375E</color>
 </resources>

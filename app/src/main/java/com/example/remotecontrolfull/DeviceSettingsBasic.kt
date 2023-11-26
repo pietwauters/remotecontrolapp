@@ -14,6 +14,7 @@ import android.net.Uri
 
 
 class DeviceSettingsBasic : AppCompatActivity() {
+
     private lateinit var layout: ScrollView
     private lateinit var binding: ActivityDeviceSettingsBasicBinding
 
@@ -26,6 +27,8 @@ class DeviceSettingsBasic : AppCompatActivity() {
         setTitle("Basic Device Settings");
         //supportActionBar?.setHomeButtonEnabled(true);
         //supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        binding.switchMode.setChecked(MainActivity.StoredValues.UIMode)
+
         binding.btnCycleIntensity.setOnClickListener {
             sendUDP(UI_INPUT_CYCLE_BRIGHTNESS)
         }
@@ -34,6 +37,10 @@ class DeviceSettingsBasic : AppCompatActivity() {
         }
         binding.btnCycleMatchType.setOnClickListener {
             sendUDP(UI_INPUT_ROUND)
+        }
+        binding.switchMode.setOnCheckedChangeListener { _, isChecked ->
+            // do whatever you need to do when the switch is toggled here
+            MainActivity.StoredValues.UIMode = isChecked
         }
 
 
