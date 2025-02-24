@@ -2,17 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/CyranoLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/CyranoLayout"
     android:filterTouchesWhenObscured="true"
+    android:orientation="vertical"
     tools:context=".Cyrano">
 
     <TextView
         android:id="@+id/textViewNameLeft"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="left"
@@ -24,8 +24,8 @@
 
     <TextView
         android:id="@+id/textViewNameRight"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="right "
@@ -37,8 +37,8 @@
 
     <TextView
         android:id="@+id/textViewScoreLeftCyrano"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="4"
@@ -52,8 +52,8 @@
 
     <TextView
         android:id="@+id/textViewScoreRightCyrano"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="14 "
@@ -70,8 +70,8 @@
         android:layout_marginLeft="18dp"
         android:layout_marginBottom="18dp"
         android:text="Prev"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnBeginMatch" />
+        app:layout_constraintBottom_toTopOf="@id/btnBeginMatch"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/btnBeginMatch"
@@ -90,8 +90,10 @@
         android:layout_marginTop="8dp"
         android:text="10.154.1.100"
         android:textSize="18sp"
+        android:gravity="center_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/btnEndMatch"
-        app:layout_constraintStart_toEndOf="@id/btnBeginMatch"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnBeginMatch"
         app:layout_constraintTop_toTopOf="@id/btnBeginMatch"
         tools:text="" />
 
@@ -102,8 +104,8 @@
         android:layout_marginRight="18dp"
         android:layout_marginBottom="18dp"
         android:text="Next"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnEndMatch" />
+        app:layout_constraintBottom_toTopOf="@id/btnEndMatch"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/btnEndMatch"
@@ -122,8 +124,9 @@
         android:layout_marginLeft="18dp"
         android:layout_marginBottom="18dp"
         android:text="Reserve L"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
     <Button
         android:id="@+id/btnReserveRight"
         android:layout_width="wrap_content"
@@ -131,8 +134,8 @@
         android:layout_marginRight="18dp"
         android:layout_marginBottom="18dp"
         android:text="Reserve R"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/btnSwapSides"
@@ -140,9 +143,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:text="Swap Sides"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

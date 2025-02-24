@@ -63,7 +63,8 @@ val UI_BUZZ = byteArrayOf(0x18,0x00,0x00,0x06)
 val UI_MINUTE_BREAK = byteArrayOf(0x20,0x00,0x00,0x06)
 val UI_NEXT_PERIOD = byteArrayOf(0x21,0x00,0x00,0x06)
 val UI_INPUT_CYCLE_BRIGHTNESS = byteArrayOf(0x30,0x00,0x00,0x06)
-
+val UI_CABLETEST_OFF = byteArrayOf(0x22,0x00,0x00,0x06)
+val UI_CABLETEST_ON = byteArrayOf(0x23,0x00,0x00,0x06)
 
 fun sendUDP(cmd: ByteArray) {
     // Hack Prevent crash (sending should be done using an async task)
@@ -486,7 +487,17 @@ fun PacketToCompetitorEvent(message: ByteArray):CompetitorEvent{
 fun PacketToExtraInfoEvent(message: ByteArray):ExtraInfoEvent{
 
     val text = String(message, 5, 3)
-    val text1 = "" + message[13].toUByte() + "." + message[15].toUByte() + "." + message[17].toUByte() + "." + message[19].toUByte();
+    val MessageText = when (message[11]){
+        87.toByte() -> "Waiting for next bout"
+        69.toByte() -> "Ending"
+        53.toByte() -> "Incorrect end. \nCheck the score or priority"
+        80.toByte() -> "Paused"
+        72.toByte() -> "Halted"
+        70.toByte() -> "Fencing"
+        else -> "Unknown state"
+    }
+    //val text1 = "" + message[13].toUByte() + "." + message[15].toUByte() + "." + message[17].toUByte() + "." + message[19].toUByte()+ '\n' + message[11].toInt().toChar();
+    val text1 = "" + message[13].toUByte() + "." + message[15].toUByte() + "." + message[17].toUByte() + "." + message[19].toUByte()+ '\n' + MessageText;
     return ExtraInfoEvent(text,text1)
 
 }

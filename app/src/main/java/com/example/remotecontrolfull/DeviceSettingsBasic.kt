@@ -28,6 +28,7 @@ class DeviceSettingsBasic : AppCompatActivity() {
         //supportActionBar?.setHomeButtonEnabled(true);
         //supportActionBar?.setDisplayHomeAsUpEnabled(true);
         binding.switchMode.setChecked(MainActivity.StoredValues.UIMode)
+        binding.switchCableTest.setChecked(false)
 
         binding.btnCycleIntensity.setOnClickListener {
             sendUDP(UI_INPUT_CYCLE_BRIGHTNESS)
@@ -41,6 +42,11 @@ class DeviceSettingsBasic : AppCompatActivity() {
         binding.switchMode.setOnCheckedChangeListener { _, isChecked ->
             // do whatever you need to do when the switch is toggled here
             MainActivity.StoredValues.UIMode = isChecked
+        }
+        binding.switchCableTest.setOnCheckedChangeListener { _, isChecked ->
+            // do whatever you need to do when the switch is toggled here
+            if(isChecked) sendUDP(UI_CABLETEST_ON)
+            else sendUDP(UI_CABLETEST_OFF)
         }
 
 

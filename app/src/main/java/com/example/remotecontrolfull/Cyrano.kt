@@ -1,13 +1,19 @@
 package com.example.remotecontrolfull
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity.VIBRATOR_SERVICE
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentActivity
@@ -33,6 +39,23 @@ val UI_RESERVE_RIGHT = byteArrayOf(0x1c,0x00,0x00,0x06)
 
 
 class Cyrano : AppCompatActivity() {
+    fun vibrate(duration : Long){
+        val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vib.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE) )
+        }else{
+            @Suppress("DEPRECATION")
+            vib.vibrate(duration)
+        }
+    }
     companion object StoredValues{
         var NameLeft = "Left"
         var NameRight = "Right"
@@ -107,11 +130,24 @@ class Cyrano : AppCompatActivity() {
         }
 
         binding.btnBeginMatch.setOnClickListener {
+            Toast.makeText(applicationContext, "To Begin the match, do a LONG Press!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnBeginMatch.setOnLongClickListener {
+
+            vibrate(100)
             sendUDP(UI_INPUT_CYRANO_BEGIN)
             finish()
+            true
         }
         binding.btnEndMatch.setOnClickListener {
+            Toast.makeText(applicationContext, "To end the match and confirm results, do a LONG Press!", Toast.LENGTH_SHORT).show()
+        }
+        binding.btnEndMatch.setOnLongClickListener {
+
+            vibrate(100)
             sendUDP(UI_INPUT_CYRANO_END)
+            true
         }
         binding.btnSwapSides.setOnClickListener {
             sendUDP(UI_SWAP_FENCERS)
