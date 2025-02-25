@@ -17,6 +17,11 @@
         android:theme="@style/Theme.RemoteControlFull"
         tools:targetApi="31">
         <activity
+            android:name=".TimerInputActivity"
+            android:exported="false"
+            android:label="@string/title_activity_timer_input"
+            android:theme="@style/Theme.RemoteControlFull.NoActionBar" />
+        <activity
             android:name=".ExpertSettings"
             android:exported="false">
             <meta-data

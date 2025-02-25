@@ -14,11 +14,13 @@
         <!-- Customize your theme here. -->
         <item name="colorButtonNormal">@color/button_background</item>
     </style>
+
     <style name="Theme.RemoteControlFull.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="Theme.RemoteControlFull.AppBarOverlay"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.RemoteControlFull.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.RemoteControlFull.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

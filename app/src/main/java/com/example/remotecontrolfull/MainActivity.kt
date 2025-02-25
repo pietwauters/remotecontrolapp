@@ -25,6 +25,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 public class SoftOptions {
     var RemoteHost: String = "192.168.4.1"
     var RemotePort: Int = 1234
@@ -66,6 +67,10 @@ val UI_INPUT_CYCLE_BRIGHTNESS = byteArrayOf(0x30,0x00,0x00,0x06)
 val UI_CABLETEST_OFF = byteArrayOf(0x22,0x00,0x00,0x06)
 val UI_CABLETEST_ON = byteArrayOf(0x23,0x00,0x00,0x06)
 
+val UI_SET_MINUTES = byteArrayOf(0x40,0x00,0x00,0x06)
+val UI_SET_SECONDS = byteArrayOf(0x41,0x00,0x00,0x06)
+val UI_SET_HUNDREDS = byteArrayOf(0x42,0x00,0x00,0x06)
+
 fun sendUDP(cmd: ByteArray) {
     // Hack Prevent crash (sending should be done using an async task)
     val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -93,7 +98,70 @@ open class MainActivity : AppCompatActivity() {
     var Buzzing = false
     var TimerIsRunning = false
 
+    // Register a launcher for the TimerInputActivity
+    private val timerInputLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            val timerValue = data?.getStringExtra("TIMER_VALUE")
+            binding.textViewTimer.text = formatTimerForDisplayandSendToDevice(timerValue ?: "0.00")
+        }
+    }
+    private fun formatTimerForDisplayandSendToDevice(timerValue: String): String {
+        return if (timerValue.contains(":")) {
+            // Format is M:SS (no rounding needed)
+            val parts = timerValue.split(":")
+            var minutes = parts[0].toByte()
+            if(minutes > 2)
+                minutes = 2
+            val seconds = parts[1].toByte()
+            var theMessage = UI_SET_MINUTES
+            theMessage[1] = minutes
+            sendUDP(theMessage)
+            theMessage = UI_SET_SECONDS
+            theMessage[1] = seconds
+            sendUDP(theMessage)
+            sendUDP(UI_SET_HUNDREDS)
+            timerValue
+        } else {
+            // Format is S.HH
+            val parts = timerValue.split(".")
+            var seconds = parts[0].toByte()
+            val hundredths = parts[1].toByte()
 
+            if (seconds >= 10) {
+                // Round to the nearest second
+                if (hundredths >= 50) {
+                    seconds++
+                }
+                // Convert to M:SS format
+                val minutes = seconds / 60
+                val remainingSeconds = seconds % 60
+                var theMessage = UI_SET_MINUTES
+                theMessage[1] = minutes.toByte()
+                sendUDP(theMessage)
+                theMessage = UI_SET_SECONDS
+                theMessage[1] = remainingSeconds.toByte()
+                sendUDP(theMessage)
+                theMessage = UI_SET_HUNDREDS
+                sendUDP(theMessage)
+
+                String.format("%d:%02d", minutes, remainingSeconds)
+            } else {
+                // Keep as S.HH format (full precision, no rounding)
+
+                var theMessage = UI_SET_MINUTES
+                theMessage[1] = 0
+                sendUDP(theMessage)
+                theMessage = UI_SET_SECONDS
+                theMessage[1] = seconds
+                sendUDP(theMessage)
+                theMessage = UI_SET_HUNDREDS
+                theMessage[1] = hundredths
+                sendUDP(theMessage)
+                String.format("%d.%02d", seconds, hundredths)
+            }
+        }
+    }
     fun vibrate(duration : Long){
         val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager =
@@ -255,6 +323,15 @@ open class MainActivity : AppCompatActivity() {
         }
         binding.btnDecrRightScore.setOnClickListener {
             sendUDP(UI_INPUT_DECR_SCORE_RIGHT)
+        }
+        // Set a click listener on the TextView
+        binding.textViewTimer.setOnClickListener {
+            Toast.makeText(applicationContext, "Do a LONG Press to change the timer!", Toast.LENGTH_SHORT).show()
+        }
+        binding.textViewTimer.setOnLongClickListener {
+            val intent = Intent(this, TimerInputActivity::class.java)
+            timerInputLauncher.launch(intent)
+            true
         }
         binding.btnBNextPause.setOnLongClickListener {
             sendUDP(UI_NEXT_PERIOD)
