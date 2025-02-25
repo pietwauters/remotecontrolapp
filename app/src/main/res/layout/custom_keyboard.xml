@@ -1,0 +1,156 @@
+<!-- res/layout/custom_keyboard.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#DDD"
+    android:padding="8dp">
+
+    <!-- Row 1: Numbers 1, 2, 3 -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:layout_marginBottom="4dp">
+<Button
+    android:id="@+id/button1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="1"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+android:textColor="#FFFFFF"/> <!-- White text -->
+<Button
+    android:id="@+id/button2"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="2"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/button3"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="3"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+</LinearLayout>
+
+    <!-- Row 2: Numbers 4, 5, 6 -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:layout_marginBottom="4dp">
+<Button
+    android:id="@+id/button4"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="4"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/button5"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="5"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/button6"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="6"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+</LinearLayout>
+
+    <!-- Row 3: Numbers 7, 8, 9 -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:layout_marginBottom="4dp">
+<Button
+    android:id="@+id/button7"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="7"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/button8"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="8"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/button9"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="9"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+</LinearLayout>
+
+    <!-- Row 4: ., :, 0, Backspace -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal">
+<Button
+    android:id="@+id/buttonDot"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="."
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/buttonColon"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text=":"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/button0"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="0"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+<Button
+    android:id="@+id/buttonBackspace"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="⌫"
+    android:textSize="18sp"
+    android:background="@drawable/keyboard_button_background"
+    android:textColor="#FFFFFF"/>
+</LinearLayout>
+    </LinearLayout>

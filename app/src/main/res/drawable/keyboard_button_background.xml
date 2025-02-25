@@ -1,0 +1,15 @@
+<!-- res/drawable/keyboard_button_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#555555"/> <!-- Darker grey when pressed -->
+            <corners android:radius="4dp"/> <!-- Rounded corners -->
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#333333"/> <!-- Dark grey background by default -->
+            <corners android:radius="4dp"/> <!-- Rounded corners -->
+        </shape>
+    </item>
+</selector>
