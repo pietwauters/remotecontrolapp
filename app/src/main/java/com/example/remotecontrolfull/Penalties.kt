@@ -53,8 +53,49 @@ class Penalties : AppCompatActivity() {
             vib.vibrate(duration)
         }
     }
-
     // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
+    public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
+    open fun onU2FEvent(event: U2FEvent) {
+        if(event.YellowPCardLeft != "0")
+        {
+            binding.textViewYellowPCardLeft.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewYellowPCardLeft.visibility = View.INVISIBLE
+        if(event.YellowPCardRight != "0")
+        {
+            binding.textViewYellowPCardRight.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewYellowPCardRight.visibility = View.INVISIBLE
+        if(event.RedPCardLeft != "0")
+        {
+            binding.textViewRedPCardLeft.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewRedPCardLeft.visibility = View.INVISIBLE
+        if(event.RedPCardRight != "0")
+        {
+            binding.textViewRedPCardRight.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewRedPCardRight.visibility = View.INVISIBLE
+        if(event.BlackPCardLeft != "0")
+        {
+            binding.textViewBlackPCardLeft.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewBlackPCardLeft.visibility = View.INVISIBLE
+        if(event.BlackPCardRight != "0")
+        {
+            binding.textViewBlackPCardRight.visibility = View.VISIBLE
+        }
+        else
+            binding.textViewBlackPCardRight.visibility = View.INVISIBLE
+
+    }
+
+        // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
     public @Subscribe(sticky = true,threadMode = ThreadMode.MAIN_ORDERED)
     open fun onStatusEvent(event: StatusEvent) {
 
@@ -152,6 +193,13 @@ class Penalties : AppCompatActivity() {
         binding.btnIncrRedCardLeft.setOnClickListener {
             sendUDP(UI_INPUT_RED_CARD_LEFT)
         }
+        binding.btnIncrBlackCardLeft.setOnClickListener {
+            sendUDP(UI_INPUT_BLACK_CARD_LEFT)
+        }
+
+        binding.btnBlackPCardLeft.setOnClickListener {
+            sendUDP(UI_INPUT_BLACK_PCARD_LEFT)
+        }
 
         binding.btnIncrYellowCardRight.setOnClickListener {
             sendUDP(UI_INPUT_YELLOW_CARD_RIGHT)
@@ -159,6 +207,13 @@ class Penalties : AppCompatActivity() {
         binding.btnIncrRedCardRight.setOnClickListener {
             sendUDP(UI_INPUT_RED_CARD_RIGHT)
         }
+        binding.btnIncrBlackCardRight.setOnClickListener {
+            sendUDP(UI_INPUT_BLACK_CARD_RIGHT)
+        }
+        binding.btnBlackPCardRight.setOnClickListener {
+            sendUDP(UI_INPUT_BLACK_PCARD_RIGHT)
+        }
+
         binding.btnUnwillingnessToFight.setOnClickListener {
             sendUDP(UI_INPUT_P_CARD)
         }
@@ -189,6 +244,31 @@ class Penalties : AppCompatActivity() {
 
         binding.btnIncrRedCardRight.setOnLongClickListener {
             sendUDP(UI_INPUT_RED_CARD_RIGHT_DECR)
+            vibrate(150)
+            true
+        }
+        binding.btnIncrBlackCardLeft.setOnLongClickListener {
+            sendUDP(UI_INPUT_BLACK_CARD_LEFT_DECR)
+            vibrate(150)
+            true
+        }
+        binding.btnIncrBlackCardRight.setOnLongClickListener {
+            sendUDP(UI_INPUT_BLACK_CARD_RIGHT_DECR)
+            vibrate(150)
+            true
+        }
+        binding.btnBlackPCardLeft.setOnLongClickListener {
+            sendUDP(UI_INPUT_BLACK_PCARD_LEFT_DECR)
+            vibrate(150)
+            true
+        }
+        binding.btnBlackPCardRight.setOnLongClickListener {
+            sendUDP(UI_INPUT_BLACK_PCARD_RIGHT_DECR)
+            vibrate(150)
+            true
+        }
+        binding.btnUnwillingnessToFight.setOnLongClickListener {
+            sendUDP(UI_INPUT_P_CARD_UNDO)
             vibrate(150)
             true
         }

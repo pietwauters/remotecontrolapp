@@ -59,6 +59,7 @@ val UI_INPUT_RED_CARD_LEFT_DECR = byteArrayOf(0x15, 0xff.toByte(),0x00,0x06)
 val UI_INPUT_RED_CARD_RIGHT = byteArrayOf(0x16,0x00,0x00,0x06)
 val UI_INPUT_RED_CARD_RIGHT_DECR = byteArrayOf(0x16, 0xff.toByte(),0x00,0x06)
 val UI_INPUT_P_CARD = byteArrayOf(0x17,0x00,0x00,0x06)
+val UI_INPUT_P_CARD_UNDO = byteArrayOf(0x17,0xff.toByte(),0x00,0x06)
 val UI_INPUT_RESTORE_UW2F_TIMER = byteArrayOf(0x19,0x00,0x00,0x06)
 val UI_BUZZ = byteArrayOf(0x18,0x00,0x00,0x06)
 val UI_MINUTE_BREAK = byteArrayOf(0x20,0x00,0x00,0x06)
@@ -70,6 +71,15 @@ val UI_CABLETEST_ON = byteArrayOf(0x23,0x00,0x00,0x06)
 val UI_SET_MINUTES = byteArrayOf(0x40,0x00,0x00,0x06)
 val UI_SET_SECONDS = byteArrayOf(0x41,0x00,0x00,0x06)
 val UI_SET_HUNDREDS = byteArrayOf(0x42,0x00,0x00,0x06)
+val UI_INPUT_BLACK_CARD_RIGHT = byteArrayOf(0x50,0x00,0x00,0x06)
+val UI_INPUT_BLACK_CARD_LEFT = byteArrayOf(0x51,0x00,0x00,0x06)
+val UI_INPUT_BLACK_CARD_RIGHT_DECR = byteArrayOf(0x50,0xff.toByte(),0x00,0x06)
+val UI_INPUT_BLACK_CARD_LEFT_DECR = byteArrayOf(0x51,0xff.toByte(),0x00,0x06)
+
+val UI_INPUT_BLACK_PCARD_RIGHT = byteArrayOf(0x52,0x00,0x00,0x06)
+val UI_INPUT_BLACK_PCARD_LEFT = byteArrayOf(0x53,0x00,0x00,0x06)
+val UI_INPUT_BLACK_PCARD_RIGHT_DECR = byteArrayOf(0x52,0xff.toByte(),0x00,0x06)
+val UI_INPUT_BLACK_PCARD_LEFT_DECR = byteArrayOf(0x53,0xff.toByte(),0x00,0x06)
 
 fun sendUDP(cmd: ByteArray) {
     // Hack Prevent crash (sending should be done using an async task)
@@ -419,6 +429,7 @@ open class ClientListen : Runnable , MainActivity() {
                         RS422_FPAMessageType.RemoteControl -> EventBus.getDefault().postSticky( PacketToRemoteControlEvent(message))
                         RS422_FPAMessageType.Lights -> EventBus.getDefault().postSticky( PacketToLightsEvent(message))
                         RS422_FPAMessageType.ExtraInfo -> EventBus.getDefault().postSticky( PacketToExtraInfoEvent(message))
+                        RS422_FPAMessageType.UW2F -> EventBus.getDefault().postSticky( PacketToU2FEvent(message))
                         else -> {}//Do nothing
                         }
 
@@ -508,6 +519,34 @@ fun PacketToStatusEvent(message: ByteArray):StatusEvent{
         String(message, 20, 1),String(message, 14, 1), // Black Cards
         String(message, 22, 1), // Prio
         String(message, 24, 1), )// Round
+}
+
+fun PacketToU2FEvent(message: ByteArray):U2FEvent{
+    var rightcards = String(message, 10, 1)
+    var lefttcards = String(message, 12, 1)
+    var YellowPCardLeft = "0"
+    var YellowPCardRight = "0"
+    var RedPCardLeft = "0"
+    var RedPCardRight = "0"
+    var BlackPCardLeft = "0"
+    var BlackPCardRight = "0"
+    when (rightcards) {
+        "1" -> YellowPCardRight = "1"
+        "2" -> RedPCardRight = "1"
+        "4" -> BlackPCardRight = "1"
+    }
+    when (lefttcards) {
+        "1" -> YellowPCardLeft = "1"
+        "2" -> RedPCardLeft = "1"
+        "4" -> BlackPCardLeft = "1"
+    }
+    return U2FEvent(
+         YellowPCardLeft,
+     YellowPCardRight,
+     RedPCardLeft,
+     RedPCardRight,
+     BlackPCardLeft,
+     BlackPCardRight)
 }
 
 fun PacketToRemoteControlEvent(message: ByteArray):RemoteControlEvent{

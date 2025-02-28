@@ -31,6 +31,20 @@ public class StatusEvent(
     val Prio: String,
     val Round: String
 )
+
+enum class U2FEventType {
+    YellowPCards,RedPCards,BlackPCards
+}
+
+public class U2FEvent(
+    val YellowPCardLeft: String,
+    val YellowPCardRight: String,
+    val RedPCardLeft: String,
+    val RedPCardRight: String,
+    val BlackPCardLeft: String,
+    val BlackPCardRight: String,
+)
+
 public class CompetitorEvent (
     val side: SideOfEvent,
     val CompetitorName: String

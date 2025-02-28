@@ -18,7 +18,7 @@
         android:background="#FFEB3B"
         android:text=""
         android:textAlignment="center"
-        android:textColor="#000000"
+        android:textColor="#FFEB3B"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -49,7 +49,7 @@
         android:background="#000000"
         android:text=""
         android:textAlignment="center"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/textViewRedCardLeft"
         app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +74,15 @@
         android:text="R"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnIncrYellowCardLeft" />
-
+    <Button
+        android:id="@+id/btnIncrBlackCardLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="B"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrRedCardLeft" />
     <TextView
         android:id="@+id/textViewYellowCardRight"
         android:layout_width="wrap_content"
@@ -85,7 +93,7 @@
         android:background="#FFEB3B"
         android:text=""
         android:textAlignment="center"
-        android:textColor="#000000"
+        android:textColor="#FFEB3B"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -116,7 +124,7 @@
         android:background="#000000"
         android:text=""
         android:textAlignment="center"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@id/textViewRedCardRight"
         app:layout_constraintTop_toTopOf="parent"
@@ -140,6 +148,109 @@
         android:text="R"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnIncrYellowCardRight" />
+    <Button
+        android:id="@+id/btnIncrBlackCardRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:text="B"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrRedCardRight" />
+
+    <TextView
+        android:id="@+id/textViewYellowPCardLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:width="32dp"
+        android:background="#FFEB3B"
+        android:text="P"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrBlackCardRight"
+        tools:text="Y" />
+
+    <TextView
+        android:id="@+id/textViewRedPCardLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:width="32dp"
+        android:background="#F44336"
+        android:text="P"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/textViewYellowPCardLeft"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrBlackCardRight"
+        tools:text="R" />
+    <TextView
+        android:id="@+id/textViewBlackPCardLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:width="32dp"
+        android:background="#000000"
+        android:text="P"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/textViewRedPCardLeft"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrBlackCardRight"
+        tools:text="B" />
+
+    <TextView
+        android:id="@+id/textViewYellowPCardRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:width="32dp"
+        android:background="#FFEB3B"
+        android:text="P"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrBlackCardRight"
+        tools:text="Y" />
+
+    <TextView
+        android:id="@+id/textViewRedPCardRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:width="32dp"
+        android:background="#F44336"
+        android:text="P"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/textViewYellowPCardRight"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrBlackCardRight"
+        tools:text="R" />
+    <TextView
+        android:id="@+id/textViewBlackPCardRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:width="32dp"
+        android:background="#000000"
+        android:text="P"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/textViewRedPCardRight"
+        app:layout_constraintTop_toBottomOf="@id/btnIncrBlackCardRight"
+        tools:text="B" />
 
     <Button
         android:id="@+id/btnUnwillingnessToFight"
@@ -150,7 +261,27 @@
         android:text="UW2F"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnIncrRedCardRight" />
+        app:layout_constraintTop_toBottomOf="@id/textViewYellowPCardLeft" />
+    <Button
+        android:id="@+id/btnBlackPCardLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Pblk"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btnUnwillingnessToFight"
+        app:layout_constraintTop_toBottomOf="@id/textViewYellowPCardLeft" />
+    <Button
+        android:id="@+id/btnBlackPCardRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Pblk"
+        app:layout_constraintLeft_toRightOf="@id/btnUnwillingnessToFight"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewYellowPCardLeft" />
 
     <Button
         android:id="@+id/btnPriority"
