@@ -197,9 +197,7 @@ class Penalties : AppCompatActivity() {
             sendUDP(UI_INPUT_BLACK_CARD_LEFT)
         }
 
-        binding.btnBlackPCardLeft.setOnClickListener {
-            sendUDP(UI_INPUT_BLACK_PCARD_LEFT)
-        }
+
 
         binding.btnIncrYellowCardRight.setOnClickListener {
             sendUDP(UI_INPUT_YELLOW_CARD_RIGHT)
@@ -210,9 +208,7 @@ class Penalties : AppCompatActivity() {
         binding.btnIncrBlackCardRight.setOnClickListener {
             sendUDP(UI_INPUT_BLACK_CARD_RIGHT)
         }
-        binding.btnBlackPCardRight.setOnClickListener {
-            sendUDP(UI_INPUT_BLACK_PCARD_RIGHT)
-        }
+
 
         binding.btnUnwillingnessToFight.setOnClickListener {
             sendUDP(UI_INPUT_P_CARD)
@@ -257,16 +253,7 @@ class Penalties : AppCompatActivity() {
             vibrate(150)
             true
         }
-        binding.btnBlackPCardLeft.setOnLongClickListener {
-            sendUDP(UI_INPUT_BLACK_PCARD_LEFT_DECR)
-            vibrate(150)
-            true
-        }
-        binding.btnBlackPCardRight.setOnLongClickListener {
-            sendUDP(UI_INPUT_BLACK_PCARD_RIGHT_DECR)
-            vibrate(150)
-            true
-        }
+
         binding.btnUnwillingnessToFight.setOnLongClickListener {
             sendUDP(UI_INPUT_P_CARD_UNDO)
             vibrate(150)

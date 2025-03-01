@@ -532,13 +532,13 @@ fun PacketToU2FEvent(message: ByteArray):U2FEvent{
     var BlackPCardRight = "0"
     when (rightcards) {
         "1" -> YellowPCardRight = "1"
-        "2" -> RedPCardRight = "1"
-        "4" -> BlackPCardRight = "1"
+        "2" -> {RedPCardRight = "1"; YellowPCardRight = "1"}
+        "4" -> {BlackPCardRight = "1"; RedPCardRight = "1"; YellowPCardRight = "1"}
     }
     when (lefttcards) {
         "1" -> YellowPCardLeft = "1"
-        "2" -> RedPCardLeft = "1"
-        "4" -> BlackPCardLeft = "1"
+        "2" -> {RedPCardLeft = "1";YellowPCardLeft = "1"}
+        "4" -> {BlackPCardLeft = "1"; RedPCardLeft = "1";YellowPCardLeft = "1"}
     }
     return U2FEvent(
          YellowPCardLeft,
